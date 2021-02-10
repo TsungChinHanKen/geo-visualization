@@ -1,0 +1,108 @@
+<!doctype html>
+
+<html lang=”en”>
+
+<head>
+
+<meta charset=”utf-8″>
+
+<title>Geo Viz Group</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js" integrity="sha512-RJJ1NNC88QhN7dwpCY8rm/6OxI+YdQP48DrLGe/eSAd+n+s1PXwQkkpzzAgoJe4cZFW2GALQoxox61gSY2yQfg==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >
+
+<link rel="stylesheet" href="style.css">
+
+<style >
+
+.cblock {
+    max-width:600px;
+}
+.spacer {
+    width: 100%;
+    height: 50px;
+
+}
+</style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="h-100 align-items-center cblock">
+
+        <h1> Project Title</h1>
+        <h3> Prepared by: Yang Jing, Victor Wang, Tsung-chin Han and Blake Allen</h3>
+        <p> Welcome to the geo-viz-group final project for w209 fall 2020 </p>
+        <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+
+        <div class="spacer"></div>
+
+        <h2> Chart 1 </h2>
+        <h3> Prepared by {YOUR NAME}</h3>
+        <div id="chart1"></div> 
+        <p> Chart 1 writeup goes here </p>
+        <div class="spacer"></div>
+
+        <h2> Chart 2 </h2>
+        <h3> Prepared by {YOUR NAME}</h3>
+        <div id="chart2"></div> 
+        <p> Chart 2 writeup goes here </p>
+        <div class="spacer"></div>
+
+
+        <h2> Chart 3 </h2>
+        <h3> Prepared by {YOUR NAME}</h3>
+        <div id="chart3"></div> 
+        <p> Chart 3 writeup goes here </p>
+        <div class="spacer"></div>
+
+
+        <h2> CO2 Emissions by Country (gt) in 2018 </h2>
+        <div align = center> Change in CO2 Emissions(gt): <output class="output" id="ttl"></output></div> 
+        <div></div>
+        <input id="chart4years" class="seaSlider" type="range" min="2018" max="2200" step="1" value="2018">
+        <div id="sliderdiv">
+            <form id="sliderForm">
+                <label for slider 1> China </label>
+                <input class="yslider" id="slider1" type="range" min="0" max="20" step="1" value="10.1"/>
+                <br>
+                <label for slider 3> Europe </label>
+                <input class="yslider" id="slider3" type="range" min="0" max="20" step="1" value="5.6"/>
+                <br>
+                <label for slider 4> United States </label>
+                <input class="yslider" id="slider4" type="range" min="0" max="20" step="1" value="5.4"/>
+                <br>
+                <label for slider 5> India </label>
+                <input class="yslider" id="slider5" type="range" min="0" max="20" step="1" value="2.66"/>
+                <br>
+                <label for slider 6> Russia </label>
+                <input class="yslider" id="slider6" type="range" min="0" max="20" step="1" value="1.7"/>
+                <br>
+                <label for slider 7> Japan </label>
+                <input class="yslider" id="slider7" type="range" min="0" max="20" step="1" value="1.2"/>
+                <br>
+                <label for slider 2> Rest of the World </label>
+                <input class="yslider" id="slider2" type="range" min="0" max="20" step="1" value="9.9"/>
+                <br>
+                <input type="button" onclick="resetFunction()" value="Reset">
+            </form>
+        </div>
+        <div class="spacer"></div>
+     </div>
+</div>
+
+
+</body>
+
+
+
+<script src="js/chart1.js"></script>
+<script src="js/chart2.js"></script>
+<script src="js/chart3.js"></script>
+<script src="js/chart4.js"></script>
+
+
+
+</html>

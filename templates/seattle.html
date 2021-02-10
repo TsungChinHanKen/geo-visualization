@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Sea Level Rise</title>
+<script src="https://d3js.org/d3.v6.js"></script>
+<script src="https://unpkg.com/d3-simple-slider"></script>
+
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Goldman&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/style.css">
+<link rel="stylesheet" type="text/css" href="slider.css">
+
+
+
+</head>
+<body>
+
+
+
+
+<!-- background: linear-gradient(to right, #fca107, #7f3121); -->
+<div id="map" class="map"></div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sea Level Rise</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <p>In this interactive visualization you can view sea level rise under different scenarios. 
+        </p>
+        <p>
+        Please note: 
+        We have optimized for a visual experience, data may not be 100% accurate.
+        </p>
+
+        Loading Visualization:
+        <div class="progress">
+        <div id="maskLoading" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+      </div> 
+      </div>
+      <div class="modal-footer">
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="control_panel" class="control_panel" >
+
+        <h3>Location: <span id="current">Seattle</span></h3>
+        <a class="locationNavItem" href="/ny">New York</a>
+        <a class="locationNavItem"  href="/seattle">Seattle</a>
+        <a  class="locationNavItem"  href="/maui">Maui</a>
+        <a class="locationNavItem"   href="/sf">San Francisco</a>
+        <a class="locationNavItem float-right"   href="/about">About</a>
+          
+        <h2>Sea Level Rise: <span id="numMeters">0</span> Meters | <span id="numFeet">0</span> Feet</h2>
+        <input id="sea_level" class="seaSlider" type="range" min="0" max="80" step="1" value="0" />
+        
+
+        <button
+          id="hideButton"
+          onclick="expandPanel()"
+        >Expand + </button>
+
+        </br>
+        </br>
+
+   
+        
+        <div class="chartButtons">
+        <button class="active" onclick="displayWidget(1)">Sea Level Scenarios</button>
+        <button onclick="displayWidget(2)">Sea Level By Activity</button>
+        <button onclick="displayWidget(3)">Sea Level By Industry</button>
+        <button onclick="displayWidget(4)">Sea Level By Country</button>
+        </div>
+
+          <div class="bar"></div>
+          <div id="chart1">
+            
+            <select class="btn btn-danger" id="selectButton"></select>
+            <div id="chart1graph"></div>
+          </div>
+
+          <div id="chart2">
+          <!-- escavic -->
+          <div class="container">
+            <h3> Year: <span id="chart2yearsText">2018</span></h3>
+            <input id="chart2years" class="seaSlider" type="range" min="2018" max="2500" step="1" value="2018">
+          <h12>Total CO2 Emissions(gt): <span id="COO2text">0</span></h2>
+              <h2>🚗 Cars Per Year(M): <span id="slider1textmin">0</span> = 🏭 CO2 (gt): <span id="slider1textemission">0</span></h2>
+              <div id="slider1" class="slider"></div>
+              <h2>✈️ Airplane Miles Per Year(M): <span id="slider2textmin">0</span> = 🏭 CO2 (gt): <span id="slider2textemission">0</span></h2>
+              <div id="slider2" class="slider"></div>
+              <h2>🍔 Burgers Per Year(M): <span id="slider3textmin">0</span> = 🏭 CO2 (gt): <span id="slider3textemission">0</span></h2>
+              <div id="slider3" class="slider"></div>
+              <h2>🌲 Trees Per Year(K): <span id="slider4textmin">0</span> = 🏭 CO2 (gt): <span id="slider4textemission">0</span></h2>
+              <div id="slider4" class="slider"></div>
+              <h2>☀️ Solar Panels Per Year(K): <span id="slider5textmin">0</span> = 🏭 CO2 (gt): <span id="slider5textemission">0</span></h2>
+              <div id="slider5" class="slider"></div>
+          </div>
+
+        </div>
+
+        <div id="chart3">
+            <div id="" class="clearfix">
+              <h3> Year: <span id="chart3yearsText">2018</span></h3>
+              <input id="chart3years" class="seaSlider" type="range" min="2018" max="2500" step="1" value="2018">
+                <div id="slider">
+                    <h1>Pollutions by Industry Sector</h1>
+                    <p>If that industry is gone..</p>
+                </div>
+                <div id="pie"></div>
+            </div>
+        </div>
+
+    <div id="chart4">
+      <h3> Year: <span id="chart4yearsText">2018</span></h3>
+      <input id="chart4years" class="seaSlider" type="range" min="2018" max="2500" step="1" value="2018">
+      <h2> Global Change in CO2 Emissions(gt): <output class="output" id="ttl"></output></h2> <input type="button" onclick="resetFunction()" value="Reset to 2018 level">
+      <h3> CO2 Emissions by Country (gt) in 2018 </h3>
+      <div></div>
+      <div id="sliderdiv">
+          <form id="sliderForm">
+             <h4>🇨🇳: 10.1 gt&nbsp;&nbsp;&nbsp; Change = 🏭 CO2 (gt): <span id="yslider1textemission">0</span></h4>
+              <input class="yslider" id="yslider1" type="range" min="0" max="20" step="1" value="10.1"/>
+              <h4>🇺🇸: 5.4 gt&nbsp;&nbsp;&nbsp; Change = 🏭 CO2 (gt): <span id="yslider4textemission">0</span></h4>
+              <input class="yslider" id="yslider4" type="range" min="0" max="20" step="1" value="5.4"/>
+              <h4>🇮🇳: 2.7 gt&nbsp;&nbsp;&nbsp; Change = 🏭 CO2 (gt): <span id="yslider5textemission">0</span></h4>
+              <input class="yslider" id="yslider5" type="range" min="0" max="20" step="1" value="2.66"/>
+              <h4>🇷🇺: 1.7 gt&nbsp;&nbsp;&nbsp; Change = 🏭 CO2 (gt): <span id="yslider6textemission">0</span></h4>
+              <input class="yslider" id="yslider6" type="range" min="0" max="20" step="1" value="1.7"/>
+              <h4>🇯🇵: 1.2 gt&nbsp;&nbsp;&nbsp; Change = 🏭 CO2 (gt): <span id="yslider7textemission">0</span></h4>
+              <input class="yslider" id="yslider7" type="range" min="0" max="20" step="1" value="1.2"/>
+              <h4>Rest of the World: 15.6 gt&nbsp;&nbsp; Change = 🏭 CO2 (gt): <span id="yslider2textemission">0</span></h4>
+              <input class="yslider" id="yslider2" type="range" min="0" max="20" step="1" value="15.6"/>
+                         
+          </form>
+      </div>
+      <div class="spacer"></div>
+   </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+
+<script>
+
+//global variable, wait until loaded
+var MASKS_LOADED = false;
+//toggle our modal
+$('#exampleModal').modal('show')
+
+//global
+var gsealevel = 0;
+var gprev_idg = "image_0";
+
+//expand or hide control panel widgets
+var hidden = true;
+expandPanel = function() {
+    var div = document.getElementById("control_panel");
+    var button = document.getElementById("hideButton");
+    if (hidden === false){
+      hidden = true;
+      div.style.height = "180px";
+      button.innerText = "Expand +"
+    } else{
+      hidden = false;
+      div.style.height = "900px";
+      button.innerText = "Hide -"
+    }
+};
+
+//initially set all charts as invisible (except 1)
+var c1 = document.getElementById("chart1");
+var c2 = document.getElementById("chart2");
+var c3 = document.getElementById("chart3");
+var c4 = document.getElementById("chart4");
+
+$("#maskLoading").attr('aria-valuenow', 20).css('width', 20);
+
+setTimeout(function(){ 
+  $("#maskLoading").attr('aria-valuenow', 200).css('width', 200);
+}, 2000);
+
+
+
+c2.style.display = "none";
+c3.style.display = "none";
+c4.style.display = "none";
+
+var sl1 = 0;
+var sl2 = 0;
+var sl3 = 0;
+var sl4 = 0;
+
+
+//MAPBOX SETUP
+	mapboxgl.accessToken = 'pk.eyJ1IjoiZXNjYWRhd2ciLCJhIjoiY2tmdmdrZGhkMTYzZDJ6czMyNWo0eWZmNCJ9.XAG-cdhWcLN2IEFAP6bCbg';
+var map = new mapboxgl.Map({
+container: 'map', // container id
+//style: 'mapbox://styles/mapbox/streets-v11', // style URL
+style: 'mapbox://styles/mapbox/satellite-streets-v11',
+center: [-122.34, 47.61], // starting position [lng, lat]
+zoom: 13, // starting zoom
+pitch: 60
+});
+
+
+//SETUP MASKS VIA COORDINATES
+coordinates = [
+  [-122.44, 47.71], //top_left
+  [-122.24, 47.71], //top_right
+  [-122.24, 47.51], //bottom_right
+  [-122.44, 47.51], //bottom_left
+];
+
+//stretch our image
+var t_lng = 0.0335; //stretches left and right
+var t_lat = 0.032; //stretches up and down
+
+//translate top_left
+coordinates[0][0] -= t_lng;
+coordinates[0][1] += t_lat;
+
+//translate top right
+coordinates[1][0] += t_lng;
+coordinates[1][1] += t_lat;
+
+//translate bottom right
+coordinates[2][0] += t_lng;
+coordinates[2][1] -= t_lat;
+
+//translate bottom left
+coordinates[3][0] -= t_lng;
+coordinates[3][1] -= t_lat;
+
+//move left
+var move_left = 0.004;
+coordinates[0][0] -= move_left;
+coordinates[1][0] -= move_left;
+coordinates[2][0] -= move_left;
+coordinates[3][0] -= move_left;
+
+//move down
+var move_down = 0.0001;
+coordinates[0][1] -= move_down;
+coordinates[1][1] -= move_down;
+coordinates[2][1] -= move_down;
+coordinates[3][1] -= move_down;
+
+
+//generate our dataset
+//TODO: load our dataset from json
+masks = [];
+for (var i = 0; i < 80; i += 1){
+  var istr = i.toString();
+  var d = {
+    source:"source_"+istr,
+    id:"image_"+istr,
+    url:"/masks/seattle_"+istr+".png",
+    coordinates: coordinates,
+  }
+  masks.push(d);
+}
+
+//clear every mask
+var clearmasks = function(map){
+
+  //set global levels to 0
+  var numMeters = document.getElementById("numMeters");
+  numMeters.textContent = "0";
+  var numFeet = document.getElementById("numFeet");
+  numFeet.textContent = "0";
+
+  for (var i = 0; i < masks.length; i++){
+    var m = masks[i];
+    map.setLayoutProperty( m.id, 'visibility', 'none');
+  }
+}
+
+//display / switch which widget is visible
+displayWidget = function(x){
+
+  c1.style.display = "none";
+  c2.style.display = "none";
+  c3.style.display = "none";
+  c4.style.display = "none";
+
+  switch(x) {
+  case 1:
+    c1.style.display = "block";
+    document.getElementById('sea_level').value = sl1;
+    //console.log(sl1);
+    clearmasks(map);
+    break;
+  case 2:
+    c2.style.display = "block";
+    document.getElementById('sea_level').value = sl2;
+    //console.log(sl2);    
+    clearmasks(map);
+    break;
+  case 3:
+    c3.style.display = "block";
+    document.getElementById('sea_level').value = sl3;
+    //console.log(sl3);    
+    clearmasks(map);
+    break;
+  case 4:
+    c4.style.display = "block";
+    document.getElementById('sea_level').value = sl4;
+    //console.log(sl4);    
+    clearmasks(map);
+    break;
+  default:
+    // code block
+    break;
+  }
+};
+
+map.on('load', function () {
+
+  //add each of our masks
+  var totalMasks = masks.length;
+  for (var i = 0; i < masks.length; i++){
+    var d = masks[i];
+
+    //add images
+    map.addSource(d["source"], {
+    "type": "image",
+    "url": d["url"],
+    "coordinates": d["coordinates"],
+    });
+
+    map.addLayer({
+    "id": d["id"],
+    "source": d["source"],
+    "type": "raster",
+    "layout":{
+      "visibility":"none",
+    },
+    "paint": {
+      "raster-opacity": 0.5
+      }
+    });
+    var progress = 480 *i/totalMasks;
+    console.log(progress);
+    $("#maskLoading").attr('aria-valuenow', progress).css('width', progress);
+    
+  }
+  MASKS_LOADED = true;
+  $("#maskLoading").attr('aria-valuenow', 480).css('width', 480);
+  setTimeout(function(){ 
+    $('#exampleModal').modal('hide');
+  }, 1000);
+
+
+  var first_mask_id = masks[0]["id"];
+  var prev_idg = first_mask_id;
+  //set our initial layer as visible
+  //map.setLayoutProperty(prev_idg, 'visibility', 'visible');
+
+  document.getElementById('sea_level')
+    .addEventListener('input', function (e) {
+      var meters = parseInt(e.target.value, 10);
+
+      var numMeters = document.getElementById("numMeters");
+      numMeters.textContent = meters;
+      var numFeet = document.getElementById("numFeet");
+      var feet = meters * 3.281; //approximate conversion from
+      numFeet.textContent = feet.toFixed(1);
+
+      if (meters > 0){
+        meters -= 1;
+        var idg = "image_"+meters.toString();
+        console.log(idg);
+        map.setLayoutProperty(idg, 'visibility', 'visible');
+        map.setLayoutProperty(prev_idg, 'visibility', 'none');
+        prev_idg = idg;
+      }
+
+  });
+
+  // add contours to map
+  map.addSource('contours', {
+    type: 'vector',
+    url: 'mapbox://mapbox.mapbox-terrain-v2'
+  });
+
+  map.addLayer({
+    'id': 'contours',
+    'type': 'line',
+    'source': 'contours',
+    'source-layer': 'contour',
+    'layout': {
+    // make layer visible by default
+      'visibility': 'visible',
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
+    'paint': {
+      'line-color': '#877b59',
+      'line-width': 1
+    }
+  });
+
+});
+
+
+
+</script>
+
+<script type="text/javascript" src="/js/chart1.js" ></script>
+<script type="text/javascript" src="/js/chart2.js" ></script>
+<script type="text/javascript" src="/js/chart3.js" ></script>
+<script type="text/javascript" src="/js/chart4.js" ></script>
+
+</body>
+</html>
