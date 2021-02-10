@@ -1,5 +1,8 @@
 # geo-viz-group 🌍📈📉🌡🌞💊📊
-repository for the w209 geo visualization group
+
+This is a team school project. The original working repo is redirecting at
+https://github.com/blakedallen/geo-viz-group
+
 
 ## Running Local Server
 
